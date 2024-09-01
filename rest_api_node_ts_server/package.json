@@ -1,0 +1,19 @@
+{
+  "name": "rest_api_node_ts_server",
+  "version": "1.0.0",
+  "description": "REst apis con express y typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Morrisaxel/Gamius2.git"
+  },
+  "author": "Morris Rodriguez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Morrisaxel/Gamius2/issues"
+  },
+  "homepage": "https://github.com/Morrisaxel/Gamius2#readme"
+}
