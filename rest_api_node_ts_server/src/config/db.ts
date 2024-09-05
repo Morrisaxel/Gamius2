@@ -9,7 +9,8 @@ dotenv.config()
 // console.log(process.env.DATABASE_URL)
 
 const db = new Sequelize(process.env.DATABASE_URL!, {
-    models : [__dirname + '/../models/**/*.ts']
+    models : [__dirname + '/../models/**/*.ts'],
+    logging: false,
 })
 
 db.addModels([Products])
