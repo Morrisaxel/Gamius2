@@ -3,9 +3,11 @@ import {
   Form,
   useActionData,
   ActionFunctionArgs,
+  redirect,
 } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { useState } from "react";
+import { addProduct } from "../services/ProductService";
 
 // Acción para manejar la validación del formulario
 export async function action({ request }: ActionFunctionArgs) {
@@ -17,7 +19,11 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!data.price) errors.price = "El precio del producto es obligatorio";
 
   if (Object.keys(errors).length > 0) return errors;
-  return {};
+
+  // Crear un nuevo producto
+  await addProduct(data);
+
+  return redirect("/");
 }
 
 export default function NewProducts() {
@@ -44,7 +50,7 @@ export default function NewProducts() {
           <label
             className={`absolute left-3 text-gray-800 transition-all transform ${
               nameFocused || errors?.name
-                ? "text-xs -translate-y-6"
+                ? "text-xs -translate-y-3 bg-white px-3"
                 : "translate-y-3"
             }`}
             htmlFor="name"
@@ -60,7 +66,7 @@ export default function NewProducts() {
             placeholder=""
             name="name"
             onFocus={() => setNameFocused(true)}
-            onBlur={() => setNameFocused(false)}
+            onBlur={(e) => setNameFocused(!!e.target.value)}
           />
           {errors?.name && <ErrorMessage>{errors.name}</ErrorMessage>}
         </div>
@@ -69,7 +75,7 @@ export default function NewProducts() {
           <label
             className={`absolute left-3 text-gray-800 transition-all transform ${
               priceFocused || errors?.price
-                ? "text-xs -translate-y-6"
+                ? "text-xs -translate-y-3 bg-white px-3"
                 : "translate-y-3"
             }`}
             htmlFor="price"
@@ -85,7 +91,7 @@ export default function NewProducts() {
             placeholder=""
             name="price"
             onFocus={() => setPriceFocused(true)}
-            onBlur={() => setPriceFocused(false)}
+            onBlur={(e) => setPriceFocused(!!e.target.value)}
           />
           {errors?.price && <ErrorMessage>{errors.price}</ErrorMessage>}
         </div>
