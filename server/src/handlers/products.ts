@@ -7,9 +7,9 @@ export const getProducts = async (req: Request, res:Response) => {
    
     const products = await Products.findAll({
             order : [
-                ['id', 'DESC']
+                ['id', 'ASC']
             ],
-            limit: 3,
+            // limit: 3,
             attributes: { exclude : ['createdAt', 'updatedAt']}
        })
        res.json({data : products})
@@ -29,9 +29,13 @@ export const getProductById = async (req: Request, res:Response) => {
 }
 
 export const createProduct = async (req : Request, res: Response) => {
-
-    const product = await Products.create(req.body)
+    try {
+        const product = await Products.create(req.body)
         res.status(201).json({data: product})
+        
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export const updatedProduct = async (req : Request, res: Response) => {

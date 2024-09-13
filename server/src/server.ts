@@ -5,6 +5,7 @@ import colors from "colors"
 import cors, {CorsOptions} from 'cors'
 import swaggerUi from "swagger-ui-express"
 import swaggerSpec from "./config/swagger"
+import morgan from "morgan"
 
 export async function connectDB() {
     try {
@@ -28,7 +29,7 @@ const server = express()
 const corsOption : CorsOptions = { 
     origin: function (origin, callback){
 
-        if(origin === process.env.FRONTEND_URL){
+        if(origin === process.env.FRONTEND_URL || 'http://192.168.1.8:4000/api/products'){
             callback(null, true)
         }else{
             callback(new Error('Conexion Rechazada'))
@@ -41,6 +42,8 @@ const corsOption : CorsOptions = {
 server.use(express.json())
 
 server.use(cors(corsOption))
+
+server.use(morgan('dev'))
 
 server.use('/api/products', router)
 

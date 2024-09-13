@@ -4,10 +4,23 @@ import {
   useActionData,
   ActionFunctionArgs,
   redirect,
+  LoaderFunctionArgs,
+  useLoaderData,
 } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
-import { useState } from "react";
-import { addProduct } from "../services/ProductService";
+import { useEffect, useState } from "react";
+import { addProduct, getProductsById } from "../services/ProductService";
+import { Product } from "../types";
+
+export async function loader({ params }: LoaderFunctionArgs) {
+  if (params.id !== undefined) {
+    const product = await getProductsById(+params.id);
+    if (!product) {
+      throw new Response("", { status: 404, statusText: "No encontrado" });
+    }
+    return product;
+  }
+}
 
 // Acción para manejar la validación del formulario
 export async function action({ request }: ActionFunctionArgs) {
@@ -26,16 +39,25 @@ export async function action({ request }: ActionFunctionArgs) {
   return redirect("/");
 }
 
-export default function NewProduct() {
+export default function EditProduct() {
   const errors = useActionData() as Record<string, string>;
   const [nameFocused, setNameFocused] = useState(false);
   const [priceFocused, setPriceFocused] = useState(false);
+  const product = useLoaderData() as Product;
+  useEffect(() => {
+    if (product.name) {
+      setNameFocused(true);
+    }
+    if (product.price) {
+      setPriceFocused(true);
+    }
+  }, [product]);
 
   return (
     <div>
       <div className="flex justify-between items-center">
         <h2 className="sm:text-xl md:text-1xl lg:text-4xl font-black text-slate-500">
-          Registrar Producto
+          Editar Producto
         </h2>
         <Link
           to="/"
@@ -65,6 +87,7 @@ export default function NewProduct() {
             }`}
             placeholder=""
             name="name"
+            defaultValue={product.name}
             onFocus={() => setNameFocused(true)}
             onBlur={(e) => setNameFocused(!!e.target.value)}
           />
@@ -90,6 +113,7 @@ export default function NewProduct() {
             }`}
             placeholder=""
             name="price"
+            defaultValue={product.price}
             onFocus={() => setPriceFocused(true)}
             onBlur={(e) => setPriceFocused(!!e.target.value)}
           />

@@ -11,7 +11,7 @@ class Products extends Model {
     declare name: string
 
     @Column({
-        type : DataType.DECIMAL(6 , 2)
+        type : DataType.DECIMAL(10 , 2)
     })
     declare price: number
 
