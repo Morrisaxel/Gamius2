@@ -20,3 +20,8 @@ export type Product = InferOutput<typeof ProductSchema>;
 //export interface Product extends InferOutput<typeof ProductSchema> {
 //  aditional: string;    
 //}
+
+
+export function toBoolen(str: string){
+    return str.toLowerCase() === 'true'
+}
