@@ -1,48 +1,60 @@
-import { Link, useLoaderData } from "react-router-dom";
-import { getProducts } from "../services/ProductService";
+import { ActionFunctionArgs, Link, useLoaderData } from "react-router-dom";
+import {
+	getProducts,
+	updatedProductAvailability,
+} from "../services/ProductService";
 import ProductsDetails from "../components/ProductsDetails";
 import { Product } from "../types";
 
 export async function loader() {
-  const products = await getProducts();
-  return products;
+	const products = await getProducts();
+	return products;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+	const data = Object.fromEntries(await request.formData());
+	await updatedProductAvailability(+data.id);
+	return {};
 }
 
 export default function Products() {
-  const products = useLoaderData() as Product[];
+	const products = useLoaderData() as Product[];
 
-  return (
-    <div>
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-slate-500">
-          Productos
-        </h2>
+	return (
+		<div>
+			<div className="flex justify-between items-center">
+				<h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-slate-500">
+					Productos
+				</h2>
 
-        <Link
-          to="productos/nuevo"
-          className="rounded-md bg-indigo-600 p-3 text-xs font-bold text-white shadow-sm hover:bg-indigo-500"
-        >
-          Agregar Producto
-        </Link>
-      </div>
+				<Link
+					to="productos/nuevo"
+					className="rounded-md bg-indigo-600 p-3 text-xs font-bold text-white shadow-sm hover:bg-indigo-500"
+				>
+					Agregar Producto
+				</Link>
+			</div>
 
-      <div className="p-2">
-        <table className="w-full mt-5 table-auto">
-          <thead className="bg-slate-800 text-white">
-            <tr>
-              <th className="p-2">Producto</th>
-              <th className="p-2">Precio</th>
-              <th className="p-2">Disponibilidad</th>
-              <th className="p-2">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <ProductsDetails key={product.id} product={product} />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+			<div className="p-2">
+				<table className="w-full mt-5 table-auto">
+					<thead className="bg-slate-800 text-white">
+						<tr>
+							<th className="p-2">Producto</th>
+							<th className="p-2">Precio</th>
+							<th className="p-2">Disponibilidad</th>
+							<th className="p-2">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						{products.map((product) => (
+							<ProductsDetails
+								key={product.id}
+								product={product}
+							/>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	);
 }
